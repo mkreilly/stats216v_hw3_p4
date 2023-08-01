@@ -1757,31 +1757,86 @@ display: none;
 <h3>a)</h3>
 <p>In this problem we will build an R function that can be used to fit a
 cubic spline to data by using a truncated power basis. (a) Write a
-function h such that h(x, z) = (x − z)3+. (b) Using h and sapply, write
-a function hs such that hs(xs, z) = (h(xs[1],z),h(xs[2],z),…,
-h(xs[length(xs)],z)) (c) Using hs, write a function splinebasis such
-that splinebasis(xs, zs) returns a length(xs)×(length(zs) + 3) matrix
-with the following columns: xs, xs2, xs3, hs(xs,zs[1]), hs(xs,zs[2]), .
-. . , hs(xs,zs[length(zs)]). (d) Now, let’s generate some data:
-set.seed(2019) x = runif(100) y = sin(10*x) (e) When we fit a cubic
-spline with knots at the points knots, that is the same thing as fitting
-a linear model predicting y from splinebasis(xs, knots). Using lm() and
-your splinebasis(), fit a spline to the data we generated using k = 3
-evenly spaced knots (knots = c(1/4,2/4,3/4)). Make a plot that clearly
-shows the original points, the curve those points were generated from,
-and a curve that represents your fitted spline. Note that the curves can
-be generated either using curve() or by using lines() with many points
-along the curve. Does the spline do a good job approximating the
-function? (f) Repeat the above process for k = 1,2,…,9. Do NOT copy and
-paste your code from the previous part multiple times to achieve this.
-(g) As we let the number of knots increase, do we expect our fitted
+function h such that h(x, z) = (x − z)3+. z is the knot</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZnVuY3Rpb24gaCh4LHopID0ge1xuXG5gYGAifQ== -->
+<pre class="r"><code>function h(x,z) = {
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IHVuZXhwZWN0ZWQgc3ltYm9sIGluIFwiZnVuY3Rpb24gaFwiXG4ifQ== -->
+<pre><code>Error: unexpected symbol in &quot;function h&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Using h and sapply, write a function hs such that hs(xs, z) =
+(h(xs[1],z),h(xs[2],z),…, h(xs[length(xs)],z))</li>
+</ol>
+<p>xs is vector reading it through</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>?sapply</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Using hs, write a function splinebasis such that splinebasis(xs, zs)
+returns a length(xs)×(length(zs) + 3) matrix with the following columns:
+xs, xs2, xs3, hs(xs,zs[1]), hs(xs,zs[2]), . . . ,
+hs(xs,zs[length(zs)]).</li>
+</ol>
+<p>just build matrix up columnwise xs is z are knots</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3BsaW5lYmFzaXMgPC0gZnVuY3Rpb24oeHMsenMpIHtcbiAgIG1hdHJpeChjKHhzLCB4c14yLCB4c14zLCBzYXBwbHkoIHhzLGhzKHpzKSApIClcbiAgIG5yb3cgPSBsZW5ndGgoeHMpLFxuICAgbmNvbCA9IGxlbmd0aCh6cykgKyAzKVxuICBcbnNhcHBseSh4cyxocyggIHogICkpXG5cbn1cbmBgYCJ9 -->
+<pre class="r"><code>splinebasis &lt;- function(xs,zs) {
+   matrix(c(xs, xs^2, xs^3, sapply( xs,hs(zs) ) )
+   nrow = length(xs),
+   ncol = length(zs) + 3)
+  
+sapply(xs,hs(  z  ))
+
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Now, let’s generate some data:</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoMjAxOSlcbnggPSBydW5pZigxMDApXG55ID0gc2luKDEwKngpXG5gYGAifQ== -->
+<pre class="r"><code>set.seed(2019)
+x = runif(100)
+y = sin(10*x)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="5" style="list-style-type: lower-alpha">
+<li>When we fit a cubic spline with knots at the points knots, that is
+the same thing as fitting a linear model predicting y from
+splinebasis(xs, knots). Using lm() and your splinebasis(), fit a spline
+to the data we generated using k = 3 evenly spaced knots (knots =
+c(1/4,2/4,3/4)). Make a plot that clearly shows the original points, the
+curve those points were generated from, and a curve that represents your
+fitted spline. Note that the curves can be generated either using
+curve() or by using lines() with many points along the curve. Does the
+spline do a good job approximating the function?</li>
+</ol>
+<p>knots=c(1/4,2/4,3/4) out3 = lm(y~I(splinebasis(x,knots)))</p>
+<ol start="6" style="list-style-type: lower-alpha">
+<li><p>Repeat the above process for k = 1,2,…,9. Do NOT copy and paste
+your code from the previous part multiple times to achieve
+this.</p></li>
+<li><p>As we let the number of knots increase, do we expect our fitted
 curve to continually become a better approximation to the true curve?
-Why or why not?</p>
+Why or why not?</p></li>
+</ol>
 <!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIFByb2JsZW0gNAoKCgojIyMgYSkKCkluIHRoaXMgcHJvYmxlbSB3ZSB3aWxsIGJ1aWxkIGFuIFIgZnVuY3Rpb24gdGhhdCBjYW4gYmUgdXNlZCB0byBmaXQgYSBjdWJpYyBzcGxpbmUgdG8gZGF0YSBieSB1c2luZyBhIHRydW5jYXRlZCBwb3dlciBiYXNpcy4KKGEpIFdyaXRlIGEgZnVuY3Rpb24gaCBzdWNoIHRoYXQgaCh4LCB6KSA9ICh4IOKIkiB6KTMrLgooYikgVXNpbmcgaCBhbmQgc2FwcGx5LCB3cml0ZSBhIGZ1bmN0aW9uIGhzIHN1Y2ggdGhhdCBocyh4cywgeikgPQogICAgICAgKGgoeHNbMV0seiksaCh4c1syXSx6KSwuLi4sIGgoeHNbbGVuZ3RoKHhzKV0seikpCihjKSBVc2luZyBocywgd3JpdGUgYSBmdW5jdGlvbiBzcGxpbmViYXNpcyBzdWNoIHRoYXQgc3BsaW5lYmFzaXMoeHMsIHpzKSByZXR1cm5zIGEgbGVuZ3RoKHhzKcOXKGxlbmd0aCh6cykgKyAzKSBtYXRyaXggd2l0aCB0aGUgZm9sbG93aW5nIGNvbHVtbnM6CnhzLCB4czIsIHhzMywgaHMoeHMsenNbMV0pLCBocyh4cyx6c1syXSksIC4gLiAuICwgaHMoeHMsenNbbGVuZ3RoKHpzKV0pLgooZCkgTm93LCBsZXTigJlzIGdlbmVyYXRlIHNvbWUgZGF0YToKICAgICAgIHNldC5zZWVkKDIwMTkpCiAgICAgICB4ID0gcnVuaWYoMTAwKQogICAgICAgeSA9IHNpbigxMCp4KQooZSkgV2hlbiB3ZSBmaXQgYSBjdWJpYyBzcGxpbmUgd2l0aCBrbm90cyBhdCB0aGUgcG9pbnRzIGtub3RzLCB0aGF0IGlzIHRoZSBzYW1lIHRoaW5nIGFzIGZpdHRpbmcgYSBsaW5lYXIgbW9kZWwgcHJlZGljdGluZyB5IGZyb20gc3BsaW5lYmFzaXMoeHMsIGtub3RzKS4gVXNpbmcgbG0oKSBhbmQgeW91ciBzcGxpbmViYXNpcygpLCBmaXQgYSBzcGxpbmUgdG8gdGhlIGRhdGEgd2UgZ2VuZXJhdGVkIHVzaW5nIGsgPSAzIGV2ZW5seSBzcGFjZWQga25vdHMgKGtub3RzID0gYygxLzQsMi80LDMvNCkpLiBNYWtlIGEgcGxvdCB0aGF0IGNsZWFybHkgc2hvd3MgdGhlIG9yaWdpbmFsIHBvaW50cywgdGhlIGN1cnZlIHRob3NlIHBvaW50cyB3ZXJlIGdlbmVyYXRlZCBmcm9tLCBhbmQgYSBjdXJ2ZSB0aGF0IHJlcHJlc2VudHMgeW91ciBmaXR0ZWQgc3BsaW5lLiBOb3RlIHRoYXQgdGhlIGN1cnZlcyBjYW4gYmUgZ2VuZXJhdGVkIGVpdGhlciB1c2luZyBjdXJ2ZSgpIG9yIGJ5IHVzaW5nIGxpbmVzKCkgd2l0aCBtYW55IHBvaW50cyBhbG9uZyB0aGUgY3VydmUuIERvZXMgdGhlIHNwbGluZSBkbyBhIGdvb2Qgam9iIGFwcHJveGltYXRpbmcgdGhlIGZ1bmN0aW9uPwooZikgUmVwZWF0IHRoZSBhYm92ZSBwcm9jZXNzIGZvciBrID0gMSwyLC4uLiw5LiBEbyBOT1QgY29weSBhbmQgcGFzdGUgeW91ciBjb2RlIGZyb20gdGhlIHByZXZpb3VzIHBhcnQgbXVsdGlwbGUgdGltZXMgdG8gYWNoaWV2ZSB0aGlzLgooZykgQXMgd2UgbGV0IHRoZSBudW1iZXIgb2Yga25vdHMgaW5jcmVhc2UsIGRvIHdlIGV4cGVjdCBvdXIgZml0dGVkIGN1cnZlIHRvIGNvbnRpbnVhbGx5IGJlY29tZSBhIGJldHRlciBhcHByb3hpbWF0aW9uIHRvIHRoZSB0cnVlIGN1cnZlPyBXaHkgb3Igd2h5IG5vdD8=</div>
+<div id="rmd-source-code">LS0tCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIFByb2JsZW0gNAoKCgojIyMgYSkKCkluIHRoaXMgcHJvYmxlbSB3ZSB3aWxsIGJ1aWxkIGFuIFIgZnVuY3Rpb24gdGhhdCBjYW4gYmUgdXNlZCB0byBmaXQgYSBjdWJpYyBzcGxpbmUgdG8gZGF0YSBieSB1c2luZyBhIHRydW5jYXRlZCBwb3dlciBiYXNpcy4KKGEpIFdyaXRlIGEgZnVuY3Rpb24gaCBzdWNoIHRoYXQgaCh4LCB6KSA9ICh4IOKIkiB6KTMrLgp6IGlzIHRoZSBrbm90CgpgYGB7cn0KaCA8LSBmdW5jdGlvbih4LHopIHsKICAgaWZlbHNlKHg+eiwoeC16KV4zLDApCn0KYGBgCgooYikgVXNpbmcgaCBhbmQgc2FwcGx5LCB3cml0ZSBhIGZ1bmN0aW9uIGhzIHN1Y2ggdGhhdCBocyh4cywgeikgPQogICAgICAgKGgoeHNbMV0seiksaCh4c1syXSx6KSwuLi4sIGgoeHNbbGVuZ3RoKHhzKV0seikpCgp4cyBpcyB2ZWN0b3IgcmVhZGluZyBpdCB0aHJvdWdoCgpgYGB7cn0KaHMgPC0gZnVuY3Rpb24oeHMseikgewogICAgc2FwcGx5KHhzLGgpCn0KYGBgCj9zYXBwbHkKCihjKSBVc2luZyBocywgd3JpdGUgYSBmdW5jdGlvbiBzcGxpbmViYXNpcyBzdWNoIHRoYXQgc3BsaW5lYmFzaXMoeHMsIHpzKSByZXR1cm5zIGEgbGVuZ3RoKHhzKcOXKGxlbmd0aCh6cykgKyAzKSBtYXRyaXggd2l0aCB0aGUgZm9sbG93aW5nIGNvbHVtbnM6CnhzLCB4czIsIHhzMywgaHMoeHMsenNbMV0pLCBocyh4cyx6c1syXSksIC4gLiAuICwgaHMoeHMsenNbbGVuZ3RoKHpzKV0pLgoKanVzdCBidWlsZCBtYXRyaXggdXAgY29sdW1ud2lzZQp4cyBpcyAKeiBhcmUga25vdHMKCgpgYGB7cn0Kc3BsaW5lYmFzaXMgPC0gZnVuY3Rpb24oeHMsenMpIHsKICAgbWF0cml4KGMoeHMsIHhzXjIsIHhzXjMsIHNhcHBseSggeHMsaHMoenMpICkgKQogICBucm93ID0gbGVuZ3RoKHhzKSwKICAgbmNvbCA9IGxlbmd0aCh6cykgKyAzKQogIApzYXBwbHkoeHMsaHMoICB6ICApKQoKfQpgYGAKCgooZCkgTm93LCBsZXTigJlzIGdlbmVyYXRlIHNvbWUgZGF0YToKCmBgYHtyfQpzZXQuc2VlZCgyMDE5KQp4ID0gcnVuaWYoMTAwKQp5ID0gc2luKDEwKngpCmBgYAoKKGUpIFdoZW4gd2UgZml0IGEgY3ViaWMgc3BsaW5lIHdpdGgga25vdHMgYXQgdGhlIHBvaW50cyBrbm90cywgdGhhdCBpcyB0aGUgc2FtZSB0aGluZyBhcyBmaXR0aW5nIGEgbGluZWFyIG1vZGVsIHByZWRpY3RpbmcgeSBmcm9tIHNwbGluZWJhc2lzKHhzLCBrbm90cykuIFVzaW5nIGxtKCkgYW5kIHlvdXIgc3BsaW5lYmFzaXMoKSwgZml0IGEgc3BsaW5lIHRvIHRoZSBkYXRhIHdlIGdlbmVyYXRlZCB1c2luZyBrID0gMyBldmVubHkgc3BhY2VkIGtub3RzIChrbm90cyA9IGMoMS80LDIvNCwzLzQpKS4gTWFrZSBhIHBsb3QgdGhhdCBjbGVhcmx5IHNob3dzIHRoZSBvcmlnaW5hbCBwb2ludHMsIHRoZSBjdXJ2ZSB0aG9zZSBwb2ludHMgd2VyZSBnZW5lcmF0ZWQgZnJvbSwgYW5kIGEgY3VydmUgdGhhdCByZXByZXNlbnRzIHlvdXIgZml0dGVkIHNwbGluZS4gTm90ZSB0aGF0IHRoZSBjdXJ2ZXMgY2FuIGJlIGdlbmVyYXRlZCBlaXRoZXIgdXNpbmcgY3VydmUoKSBvciBieSB1c2luZyBsaW5lcygpIHdpdGggbWFueSBwb2ludHMgYWxvbmcgdGhlIGN1cnZlLiBEb2VzIHRoZSBzcGxpbmUgZG8gYSBnb29kIGpvYiBhcHByb3hpbWF0aW5nIHRoZSBmdW5jdGlvbj8KCgoKCmtub3RzPWMoMS80LDIvNCwzLzQpCm91dDMgPSBsbSh5fkkoc3BsaW5lYmFzaXMoeCxrbm90cykpKQoKKGYpIFJlcGVhdCB0aGUgYWJvdmUgcHJvY2VzcyBmb3IgayA9IDEsMiwuLi4sOS4gRG8gTk9UIGNvcHkgYW5kIHBhc3RlIHlvdXIgY29kZSBmcm9tIHRoZSBwcmV2aW91cyBwYXJ0IG11bHRpcGxlIHRpbWVzIHRvIGFjaGlldmUgdGhpcy4KCgoKKGcpIEFzIHdlIGxldCB0aGUgbnVtYmVyIG9mIGtub3RzIGluY3JlYXNlLCBkbyB3ZSBleHBlY3Qgb3VyIGZpdHRlZCBjdXJ2ZSB0byBjb250aW51YWxseSBiZWNvbWUgYSBiZXR0ZXIgYXBwcm94aW1hdGlvbiB0byB0aGUgdHJ1ZSBjdXJ2ZT8gV2h5IG9yIHdoeSBub3Q/</div>
 
 
 

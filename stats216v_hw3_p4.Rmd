@@ -10,14 +10,64 @@ output: html_notebook
 
 In this problem we will build an R function that can be used to fit a cubic spline to data by using a truncated power basis.
 (a) Write a function h such that h(x, z) = (x − z)3+.
+z is the knot
+
+```{r}
+h <- function(x,z) {
+   ifelse(x>z,(x-z)^3,0)
+}
+```
+
 (b) Using h and sapply, write a function hs such that hs(xs, z) =
        (h(xs[1],z),h(xs[2],z),..., h(xs[length(xs)],z))
+
+xs is vector reading it through
+
+```{r}
+hs <- function(xs,z) {
+    sapply(xs,h)
+}
+```
+?sapply
+
 (c) Using hs, write a function splinebasis such that splinebasis(xs, zs) returns a length(xs)×(length(zs) + 3) matrix with the following columns:
 xs, xs2, xs3, hs(xs,zs[1]), hs(xs,zs[2]), . . . , hs(xs,zs[length(zs)]).
+
+just build matrix up columnwise
+xs is 
+z are knots
+
+
+```{r}
+splinebasis <- function(xs,zs) {
+   matrix(c(xs, xs^2, xs^3, sapply( xs,hs(zs) ) )
+   nrow = length(xs),
+   ncol = length(zs) + 3)
+  
+sapply(xs,hs(  z  ))
+
+}
+```
+
+
 (d) Now, let’s generate some data:
-       set.seed(2019)
-       x = runif(100)
-       y = sin(10*x)
+
+```{r}
+set.seed(2019)
+x = runif(100)
+y = sin(10*x)
+```
+
 (e) When we fit a cubic spline with knots at the points knots, that is the same thing as fitting a linear model predicting y from splinebasis(xs, knots). Using lm() and your splinebasis(), fit a spline to the data we generated using k = 3 evenly spaced knots (knots = c(1/4,2/4,3/4)). Make a plot that clearly shows the original points, the curve those points were generated from, and a curve that represents your fitted spline. Note that the curves can be generated either using curve() or by using lines() with many points along the curve. Does the spline do a good job approximating the function?
+
+
+
+
+knots=c(1/4,2/4,3/4)
+out3 = lm(y~I(splinebasis(x,knots)))
+
 (f) Repeat the above process for k = 1,2,...,9. Do NOT copy and paste your code from the previous part multiple times to achieve this.
+
+
+
 (g) As we let the number of knots increase, do we expect our fitted curve to continually become a better approximation to the true curve? Why or why not?
