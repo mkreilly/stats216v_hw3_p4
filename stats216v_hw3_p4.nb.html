@@ -1755,11 +1755,33 @@ display: none;
 <h2>Problem 4</h2>
 <div id="a" class="section level3">
 <h3>a)</h3>
+<p>In this problem we will build an R function that can be used to fit a
+cubic spline to data by using a truncated power basis. (a) Write a
+function h such that h(x, z) = (x − z)3+. (b) Using h and sapply, write
+a function hs such that hs(xs, z) = (h(xs[1],z),h(xs[2],z),…,
+h(xs[length(xs)],z)) (c) Using hs, write a function splinebasis such
+that splinebasis(xs, zs) returns a length(xs)×(length(zs) + 3) matrix
+with the following columns: xs, xs2, xs3, hs(xs,zs[1]), hs(xs,zs[2]), .
+. . , hs(xs,zs[length(zs)]). (d) Now, let’s generate some data:
+set.seed(2019) x = runif(100) y = sin(10*x) (e) When we fit a cubic
+spline with knots at the points knots, that is the same thing as fitting
+a linear model predicting y from splinebasis(xs, knots). Using lm() and
+your splinebasis(), fit a spline to the data we generated using k = 3
+evenly spaced knots (knots = c(1/4,2/4,3/4)). Make a plot that clearly
+shows the original points, the curve those points were generated from,
+and a curve that represents your fitted spline. Note that the curves can
+be generated either using curve() or by using lines() with many points
+along the curve. Does the spline do a good job approximating the
+function? (f) Repeat the above process for k = 1,2,…,9. Do NOT copy and
+paste your code from the previous part multiple times to achieve this.
+(g) As we let the number of knots increase, do we expect our fitted
+curve to continually become a better approximation to the true curve?
+Why or why not?</p>
 <!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIFByb2JsZW0gNAoKCgojIyMgYSkKCg==</div>
+<div id="rmd-source-code">LS0tCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCiMjIFByb2JsZW0gNAoKCgojIyMgYSkKCkluIHRoaXMgcHJvYmxlbSB3ZSB3aWxsIGJ1aWxkIGFuIFIgZnVuY3Rpb24gdGhhdCBjYW4gYmUgdXNlZCB0byBmaXQgYSBjdWJpYyBzcGxpbmUgdG8gZGF0YSBieSB1c2luZyBhIHRydW5jYXRlZCBwb3dlciBiYXNpcy4KKGEpIFdyaXRlIGEgZnVuY3Rpb24gaCBzdWNoIHRoYXQgaCh4LCB6KSA9ICh4IOKIkiB6KTMrLgooYikgVXNpbmcgaCBhbmQgc2FwcGx5LCB3cml0ZSBhIGZ1bmN0aW9uIGhzIHN1Y2ggdGhhdCBocyh4cywgeikgPQogICAgICAgKGgoeHNbMV0seiksaCh4c1syXSx6KSwuLi4sIGgoeHNbbGVuZ3RoKHhzKV0seikpCihjKSBVc2luZyBocywgd3JpdGUgYSBmdW5jdGlvbiBzcGxpbmViYXNpcyBzdWNoIHRoYXQgc3BsaW5lYmFzaXMoeHMsIHpzKSByZXR1cm5zIGEgbGVuZ3RoKHhzKcOXKGxlbmd0aCh6cykgKyAzKSBtYXRyaXggd2l0aCB0aGUgZm9sbG93aW5nIGNvbHVtbnM6CnhzLCB4czIsIHhzMywgaHMoeHMsenNbMV0pLCBocyh4cyx6c1syXSksIC4gLiAuICwgaHMoeHMsenNbbGVuZ3RoKHpzKV0pLgooZCkgTm93LCBsZXTigJlzIGdlbmVyYXRlIHNvbWUgZGF0YToKICAgICAgIHNldC5zZWVkKDIwMTkpCiAgICAgICB4ID0gcnVuaWYoMTAwKQogICAgICAgeSA9IHNpbigxMCp4KQooZSkgV2hlbiB3ZSBmaXQgYSBjdWJpYyBzcGxpbmUgd2l0aCBrbm90cyBhdCB0aGUgcG9pbnRzIGtub3RzLCB0aGF0IGlzIHRoZSBzYW1lIHRoaW5nIGFzIGZpdHRpbmcgYSBsaW5lYXIgbW9kZWwgcHJlZGljdGluZyB5IGZyb20gc3BsaW5lYmFzaXMoeHMsIGtub3RzKS4gVXNpbmcgbG0oKSBhbmQgeW91ciBzcGxpbmViYXNpcygpLCBmaXQgYSBzcGxpbmUgdG8gdGhlIGRhdGEgd2UgZ2VuZXJhdGVkIHVzaW5nIGsgPSAzIGV2ZW5seSBzcGFjZWQga25vdHMgKGtub3RzID0gYygxLzQsMi80LDMvNCkpLiBNYWtlIGEgcGxvdCB0aGF0IGNsZWFybHkgc2hvd3MgdGhlIG9yaWdpbmFsIHBvaW50cywgdGhlIGN1cnZlIHRob3NlIHBvaW50cyB3ZXJlIGdlbmVyYXRlZCBmcm9tLCBhbmQgYSBjdXJ2ZSB0aGF0IHJlcHJlc2VudHMgeW91ciBmaXR0ZWQgc3BsaW5lLiBOb3RlIHRoYXQgdGhlIGN1cnZlcyBjYW4gYmUgZ2VuZXJhdGVkIGVpdGhlciB1c2luZyBjdXJ2ZSgpIG9yIGJ5IHVzaW5nIGxpbmVzKCkgd2l0aCBtYW55IHBvaW50cyBhbG9uZyB0aGUgY3VydmUuIERvZXMgdGhlIHNwbGluZSBkbyBhIGdvb2Qgam9iIGFwcHJveGltYXRpbmcgdGhlIGZ1bmN0aW9uPwooZikgUmVwZWF0IHRoZSBhYm92ZSBwcm9jZXNzIGZvciBrID0gMSwyLC4uLiw5LiBEbyBOT1QgY29weSBhbmQgcGFzdGUgeW91ciBjb2RlIGZyb20gdGhlIHByZXZpb3VzIHBhcnQgbXVsdGlwbGUgdGltZXMgdG8gYWNoaWV2ZSB0aGlzLgooZykgQXMgd2UgbGV0IHRoZSBudW1iZXIgb2Yga25vdHMgaW5jcmVhc2UsIGRvIHdlIGV4cGVjdCBvdXIgZml0dGVkIGN1cnZlIHRvIGNvbnRpbnVhbGx5IGJlY29tZSBhIGJldHRlciBhcHByb3hpbWF0aW9uIHRvIHRoZSB0cnVlIGN1cnZlPyBXaHkgb3Igd2h5IG5vdD8=</div>
 
 
 
