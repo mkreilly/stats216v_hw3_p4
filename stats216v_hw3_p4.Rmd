@@ -8,6 +8,8 @@ output: html_notebook
 
 ### a)
 
+p297
+
 In this problem we will build an R function that can be used to fit a cubic spline to data by using a truncated power basis.
 (a) Write a function h such that h(x, z) = (x − z)3+.
 z is the knot
