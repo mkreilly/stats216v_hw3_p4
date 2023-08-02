@@ -15,9 +15,16 @@ In this problem we will build an R function that can be used to fit a cubic spli
 z is the knot
 
 ```{r}
+# truncated power base function
+# when added to model for a cubic polynomial this
+# keeps f continuous for 1st and 2nd derivatives at each knot
+# x is predictor
+# z is knot
+
 h <- function(x,z) {
    ifelse(x>z,(x-z)^3,0)
 }
+
 ```
 
 (b) Using h and sapply, write a function hs such that hs(xs, z) =
@@ -26,6 +33,10 @@ h <- function(x,z) {
 xs is vector reading it through
 
 ```{r}
+# 
+# xs is vector of predictors
+# h is a matrix of truncated power base functions
+
 hs <- function(xs,z) {
     sapply(xs,h)
 }
@@ -41,6 +52,10 @@ z are knots
 
 
 ```{r}
+#
+# xs is predictors
+# zs is knots
+
 splinebasis <- function(xs,zs) {
    matrix(c(xs, xs^2, xs^3, sapply( xs,hs(zs) ) )
    nrow = length(xs),
