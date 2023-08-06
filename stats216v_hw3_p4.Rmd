@@ -38,7 +38,7 @@ xs is vector reading it through
 # h is a matrix of truncated power base functions
 
 hs <- function(xs,z) {
-    sapply(xs,h)
+    sapply(xs,h, z=z)
 }
 ```
 ?sapply
@@ -57,13 +57,21 @@ z are knots
 # zs is knots
 
 splinebasis <- function(xs,zs) {
-   matrix(c(xs, xs^2, xs^3, sapply( xs,hs(zs) ) )
-   nrow = length(xs),
-   ncol = length(zs) + 3)
-  
-sapply(xs,hs(  z  ))
-
+   mhs <- matrix(data=0,nrow=length(xs),ncol=length(zs))
+   for(j in zs){
+       mhs[,j] = sapply( xs, hs, z=zs)
+   }
+   m <- cbind(xs, xs^2, xs^3, mhs)
+   print(m)
 }
+
+
+mhs <- cbind(x, x^2, x^3)
+
+sapply()
+?sapply
+
+mhs
 ```
 
 
@@ -79,9 +87,20 @@ y = sin(10*x)
 
 
 
-
 knots=c(1/4,2/4,3/4)
+
 out3 = lm(y~I(splinebasis(x,knots)))
+
+print(out3)
+
+
+plot(x,y)
+abline(out3)
+
+
+
+out3
+
 
 (f) Repeat the above process for k = 1,2,...,9. Do NOT copy and paste your code from the previous part multiple times to achieve this.
 
