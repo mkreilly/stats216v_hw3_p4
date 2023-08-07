@@ -138,4 +138,4 @@ o9 <- runner(k9)
 
 
 ### g)
-Yes, as the number of knots increases we expect the curve to become a better approximation of the true curve because it is increasingly flexible and better able to match the true data. However, in the real world when the true data is unknown, increasing the knots would likely lear to overfiting. Picking a good k could be done by using a validation or cross-validation approach.
+Yes, as the number of knots increases we expect the curve to become a better approximation of the true curve because it is increasingly flexible and better able to match the true data. Improvement will slow and then stop as the number DoF in the model approach the number of unique x values. However, in the real world when the true data is unknown, increasing the knots would likely lear to overfiting. Picking a good k could be done by using a validation or cross-validation approach.
