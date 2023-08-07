@@ -1,19 +1,12 @@
 ---
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 ## Problem 4
 
-
-
 ### a)
-
-p297
-
-In this problem we will build an R function that can be used to fit a cubic spline to data by using a truncated power basis.
-(a) Write a function h such that h(x, z) = (x − z)3+.
-z is the knot
-
 ```{r}
 # truncated power base function
 # when added to model for a cubic polynomial this
@@ -24,14 +17,10 @@ z is the knot
 h <- function(x,z) {
    ifelse(x>z,(x-z)^3,0)
 }
-
 ```
 
-(b) Using h and sapply, write a function hs such that hs(xs, z) =
-       (h(xs[1],z),h(xs[2],z),..., h(xs[length(xs)],z))
 
-xs is vector reading it through
-
+### b)
 ```{r}
 # 
 # xs is vector of predictors
@@ -41,16 +30,9 @@ hs <- function(xs,z) {
     sapply(xs,h, z=z)
 }
 ```
-?sapply
-
-(c) Using hs, write a function splinebasis such that splinebasis(xs, zs) returns a length(xs)×(length(zs) + 3) matrix with the following columns:
-xs, xs2, xs3, hs(xs,zs[1]), hs(xs,zs[2]), . . . , hs(xs,zs[length(zs)]).
-
-just build matrix up columnwise
-xs is 
-z are knots
 
 
+### c)
 ```{r}
 #
 # xs is predictors
@@ -58,34 +40,23 @@ z are knots
 
 splinebasis <- function(xs,zs) {
    mhs <- matrix(data=0,nrow=length(xs),ncol=length(zs))
-   for(j in zs){
-       mhs[,j] = sapply( xs, hs, z=zs)
+   for(j in 1:length(zs)){
+       mhs[,j] = sapply( xs, hs, zs[j])
    }
    m <- cbind(xs, xs^2, xs^3, mhs)
-   print(m)
 }
-
-
-mhs <- cbind(x, x^2, x^3)
-
-sapply()
-?sapply
-
-mhs
 ```
 
 
-(d) Now, let’s generate some data:
-
+### d)
 ```{r}
 set.seed(2019)
 x = runif(100)
 y = sin(10*x)
 ```
 
-(e) When we fit a cubic spline with knots at the points knots, that is the same thing as fitting a linear model predicting y from splinebasis(xs, knots). Using lm() and your splinebasis(), fit a spline to the data we generated using k = 3 evenly spaced knots (knots = c(1/4,2/4,3/4)). Make a plot that clearly shows the original points, the curve those points were generated from, and a curve that represents your fitted spline. Note that the curves can be generated either using curve() or by using lines() with many points along the curve. Does the spline do a good job approximating the function?
-
-
+### e)
+```{r}
 
 knots=c(1/4,2/4,3/4)
 
@@ -93,17 +64,78 @@ out3 = lm(y~I(splinebasis(x,knots)))
 
 print(out3)
 
+yhat <- predict(out3)
+
+reorder <- order(x)
 
 plot(x,y)
-abline(out3)
+
+lines(x[reorder],y[reorder])
+
+points(x,yhat, col='green')
+lines(x[reorder],yhat[reorder], col='green')
+```
+The spline (in green) does an OK job of approximating the function. The green line is fairly close to the black line but the spline is a bit low both on the left maximum and the central minimum.
+
+### f)
+```{r}
+k1=c(1/2)
+k2=c(1/3,2/3)
+k3=c(1/4,2/4,3/4)
+k4=c(1/5,2/5,3/5,4/5)
+k5=c(1/6,2/6,3/6,4/6,5/6)
+k6=c(1/7,2/7,3/7,4/7,5/7,6/7)
+k7=c(1/8,2/8,3/8,4/8,5/8,6/8,7/8)
+k8=c(1/9,2/9,3/9,4/9,5/9,6/9,7/9,8/9)
+k9=c(1/10,2/10,3/10,4/10,5/10,6/10,7/10,8/10,9/10)
+
+runner <- function (k) {
+  m <- lm(y~I(splinebasis(x,k)))
+  yhat <- predict(m)
+  reorder <- order(x)
+  plot(x,y)
+  lines(x[reorder],y[reorder])
+  points(x,yhat, col='green',pch=5)
+  lines(x[reorder],yhat[reorder], col='green',lty=2)
+}
+```
+
+```{r}
+o1 <- runner(k1)
+```
+
+```{r}
+o2 <- runner(k2)
+```
+
+```{r}
+o3 <- runner(k3)
+```
+
+```{r}
+o4 <- runner(k4)
+```
+
+```{r}
+o5 <- runner(k5)
+```
+
+```{r}
+o6 <- runner(k6)
+```
+
+```{r}
+o7 <- runner(k7)
+```
+
+```{r}
+o8 <- runner(k8)
+```
+
+```{r}
+o9 <- runner(k9)
+```
 
 
-
-out3
-
-
-(f) Repeat the above process for k = 1,2,...,9. Do NOT copy and paste your code from the previous part multiple times to achieve this.
-
-
-
-(g) As we let the number of knots increase, do we expect our fitted curve to continually become a better approximation to the true curve? Why or why not?
+### g)
+Yes, as the number of knots increases we expect the curve to become a better approximation of the true curve because it is increasingly flexible and better able to match the true data. However, in the real world when the true data is unknown, increasing the knots would likely lear to overfiting. Picking a good k could be done by using a validation or cross-validation approach.
